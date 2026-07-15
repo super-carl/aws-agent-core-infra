@@ -1,0 +1,2 @@
+# Action Group executor — stdlib only (urllib); boto3 provided by the Lambda runtime.
+boto3>=1.34.0

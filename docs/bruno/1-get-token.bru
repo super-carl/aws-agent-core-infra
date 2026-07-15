@@ -1,0 +1,27 @@
+meta {
+  name: 1 - Get token (Cognito)
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{cognitoTokenUrl}}
+  body: formUrlEncoded
+  auth: none
+}
+
+headers {
+  Content-Type: application/x-www-form-urlencoded
+}
+
+body:form-urlencoded {
+  grant_type: client_credentials
+  client_id: {{clientId}}
+  client_secret: {{clientSecret}}
+  scope: supercarl-api/read supercarl-api/write
+}
+
+script:post-response {
+  bru.setVar("token", res.body.access_token);
+  console.log("token stored (" + (res.body.access_token || "").length + " chars)");
+}

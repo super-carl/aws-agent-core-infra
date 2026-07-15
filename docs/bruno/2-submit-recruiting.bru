@@ -1,0 +1,28 @@
+meta {
+  name: 2 - Submit research (recruiting)
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}research
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "prompt": "Senior backend engineers in Austin with AWS experience",
+    "useCase": "recruiting",
+    "channels": ["ses"]
+  }
+}
+
+script:post-response {
+  bru.setVar("taskId", res.body.taskId);
+  console.log("taskId = " + res.body.taskId);
+}

@@ -1,0 +1,110 @@
+# ─── NEVER COMMIT: secrets & client/internal material ───────────────────────
+# AWS access keys exported from console
+*accessKeys*.csv
+*_accessKeys*.csv
+*.pem
+*.key
+credentials
+.aws/
+
+# Internal / client deliverables that are NOT part of the public blueprint
+*.zip
+*.pptx
+*.docx
+*.xlsx
+supercarl_implementation_plan*.pdf
+Supercarl IW*/
+Bedrock-AgentCore-QuickStart-main*/
+client-deployments/
+
+# ─── AgentCore CLI generated files ──────────────────────────────────────────
+.bedrock_agentcore/
+.bedrock_agentcore.yaml
+.bedrock/
+
+# ─── CDK ────────────────────────────────────────────────────────────────────
+infra/cdk.out/
+infra/cdk.context.json
+cdk-outputs.json
+
+# ─── Node.js ────────────────────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ─── Python ─────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+env/
+venv/
+.venv/
+ENV/
+
+# ─── Env files ──────────────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ─── IDE / OS ───────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ─── Claude Code ────────────────────────────────────────────────────────────
+.claude/
+
+# ─── Logs / temp / build ────────────────────────────────────────────────────
+*.log
+logs/
+*.tmp
+*.temp
+response.json
+*.response
+dist/
+build/
+*.tgz
+*.tar.gz
+*.bak
+*.backup
+coverage/
+
+# Local dev artifacts
+local/artifacts/
+
+# Postman environment (contains client secret) — never commit
+*.postman_environment.json
+
+# Bruno environment (contains client secret) — never commit
+docs/bruno/environments/live-aws.bru
+
+# Demo page token (short-lived) + Playwright output
+demo/config.local.js
+demo/videos/
+test-results/
+
+# Demo / presentation artifacts — kept local only (not part of the blueprint)
+demo/
+scripts/record-demo.mjs
+scripts/make-demo-config.sh
+scripts/openclaw-demo.sh
+scripts/demo.sh
+scripts/make_week1_deck.py
+scripts/make_week3_deck.py
+scripts/make_week5_deck.py
+docs/demo-runbook.md
+docs/agent-frameworks/*/example-run.md
+/package.json
+/package-lock.json
+scripts/make_week2_deck.py

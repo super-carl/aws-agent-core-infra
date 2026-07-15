@@ -1,0 +1,29 @@
+{
+  "_comment": "Add the SuperCarl MCP to OpenClaw. Merge this into ~/.openclaw/openclaw.json, set your SuperCarl key, and restart the gateway. toolFilter.include restricts OpenClaw to SuperCarl's search/read tools only (no outreach / no account changes).",
+  "mcp": {
+    "servers": {
+      "supercarl": {
+        "url": "https://api.supercarl.ai/mcp",
+        "transport": "streamable-http",
+        "headers": {
+          "Authorization": "Bearer YOUR_SUPERCARL_API_KEY"
+        },
+        "connectTimeout": 15,
+        "timeout": 60,
+        "supportsParallelToolCalls": true,
+        "toolFilter": {
+          "include": [
+            "people_search",
+            "people_lookup_batch",
+            "company_search",
+            "company_search_batch",
+            "jobs_search",
+            "posts_search",
+            "query_search_result"
+          ],
+          "exclude": []
+        }
+      }
+    }
+  }
+}

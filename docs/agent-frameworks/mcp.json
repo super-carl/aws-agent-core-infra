@@ -1,0 +1,12 @@
+{
+  "_comment": "Example: add the SuperCarl MCP server to an agent framework (Claude Code, etc.). Set SUPERCARL_API_KEY in your environment. Never commit a real key.",
+  "mcpServers": {
+    "supercarl": {
+      "type": "http",
+      "url": "https://api.supercarl.ai/mcp",
+      "headers": {
+        "Authorization": "Bearer ${SUPERCARL_API_KEY}"
+      }
+    }
+  }
+}

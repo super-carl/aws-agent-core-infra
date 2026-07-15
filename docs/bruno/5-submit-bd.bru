@@ -1,0 +1,27 @@
+meta {
+  name: 5 - Submit research (business development)
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}research
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "prompt": "Series-A fintech companies hiring backend engineers in NYC",
+    "useCase": "bd",
+    "channels": ["ses"]
+  }
+}
+
+script:post-response {
+  bru.setVar("taskId", res.body.taskId);
+}

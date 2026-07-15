@@ -1,0 +1,14 @@
+# Add SuperCarl as a remote MCP extension in goose.
+# Paste under `extensions:` in ~/.config/goose/config.yaml, or add it via the
+# goose Desktop app: Settings -> Extensions -> Add -> Remote (Streamable HTTP).
+# Set your SuperCarl key in the Authorization header.
+extensions:
+  supercarl:
+    enabled: true
+    type: streamable_http
+    name: supercarl
+    uri: https://api.supercarl.ai/mcp
+    headers:
+      Authorization: "Bearer YOUR_SUPERCARL_API_KEY"
+    timeout: 300
+    bundled: false

@@ -1,0 +1,48 @@
+# SuperCarl sourcing — goose recipe.
+# Run:  goose run --recipe supercarl-recipe.yaml --params SUPERCARL_API_KEY=carl_xxx
+# or import it in the goose Desktop app (Recipes).
+# Note: recipe/extension schema can vary slightly by goose version — adjust keys
+# if goose complains, but the shape below matches current goose (streamable_http).
+version: "1.0.0"
+title: "SuperCarl sourcing"
+description: "Turn a natural-language brief into a shortlist using SuperCarl's live search tools."
+
+parameters:
+  - key: SUPERCARL_API_KEY
+    input_type: string
+    requirement: required
+    description: "Your SuperCarl API key"
+
+extensions:
+  - type: streamable_http
+    name: supercarl
+    uri: https://api.supercarl.ai/mcp
+    headers:
+      Authorization: "Bearer {{ SUPERCARL_API_KEY }}"
+    timeout: 300
+    bundled: false
+
+instructions: |
+  You are a sourcing assistant with access to the SuperCarl MCP tools.
+  Use ONLY the search/read tools: people_search, people_lookup_batch,
+  company_search, company_search_batch, jobs_search, posts_search,
+  query_search_result.
+
+  NEVER call write/outreach tools (send_communication, project_action,
+  contacts_*, watch_signals, super_carl_action, social_proximity_research).
+  Do not send messages or modify the account.
+
+  Two use cases:
+  - recruiting: call people_search, then present a shortlist of 10+ candidates.
+  - business development (bd): call company_search first to find target
+    companies, then people_search scoped to those companies for contacts.
+
+  Ground every field in a tool result — never invent names, titles, or
+  companies. Present a clean shortlist: name, title, company, location, and a
+  short match reason for each row.
+
+prompt: |
+  I'll give you a brief. Decide if it's recruiting or business development,
+  run the right SuperCarl search flow, and give me a shortlist.
+
+  Brief: Senior backend engineers in Austin with AWS experience.

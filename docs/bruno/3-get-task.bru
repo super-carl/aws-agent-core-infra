@@ -1,0 +1,11 @@
+meta {
+  name: 3 - Get task (poll until completed)
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}research/{{taskId}}
+  body: none
+  auth: inherit
+}

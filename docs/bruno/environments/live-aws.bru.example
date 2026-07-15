@@ -1,0 +1,6 @@
+vars {
+  baseUrl: https://YOUR_API_ID.execute-api.us-east-1.amazonaws.com/v1/
+  cognitoTokenUrl: https://supercarl-YOUR_ACCOUNT.auth.us-east-1.amazoncognito.com/oauth2/token
+  clientId: YOUR_COGNITO_CLIENT_ID
+  clientSecret: YOUR_COGNITO_CLIENT_SECRET
+}

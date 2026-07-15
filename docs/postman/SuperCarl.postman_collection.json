@@ -1,0 +1,144 @@
+{
+  "info": {
+    "name": "SuperCarl API",
+    "_postman_id": "supercarl-collection-0001",
+    "description": "SuperCarl — autonomous research worker on Amazon Bedrock AgentCore.\n\nHow to demo:\n1. Import this collection AND the environment file (SuperCarl.postman_environment.json), then select the environment (top-right).\n2. Run **1 - Get token** (stores {{token}}).\n3. Run **2 - Submit research (recruiting)** (stores {{taskId}}).\n4. Run **3 - Get task (poll)** a few times until status = completed — the shortlist is in `result` / the S3 artifact.\n\nSubmission is asynchronous: POST returns a taskId immediately; poll the GET.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+  },
+  "variable": [
+    { "key": "token", "value": "" },
+    { "key": "taskId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "0 - Health (no auth)",
+      "request": {
+        "auth": { "type": "noauth" },
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}health", "host": ["{{baseUrl}}health"] }
+      }
+    },
+    {
+      "name": "1 - Get token (Cognito)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const j = pm.response.json();",
+              "pm.test('has access_token', () => pm.expect(j.access_token).to.be.a('string'));",
+              "pm.collectionVariables.set('token', j.access_token);",
+              "console.log('token stored (' + j.access_token.length + ' chars)');"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": { "type": "noauth" },
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            { "key": "grant_type", "value": "client_credentials" },
+            { "key": "client_id", "value": "{{clientId}}" },
+            { "key": "client_secret", "value": "{{clientSecret}}" },
+            { "key": "scope", "value": "supercarl-api/read supercarl-api/write" }
+          ]
+        },
+        "url": { "raw": "{{cognitoTokenUrl}}", "host": ["{{cognitoTokenUrl}}"] }
+      }
+    },
+    {
+      "name": "2 - Submit research (recruiting)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const j = pm.response.json();",
+              "pm.test('accepted (202)', () => pm.response.to.have.status(202));",
+              "pm.collectionVariables.set('taskId', j.taskId);",
+              "console.log('taskId = ' + j.taskId);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"prompt\": \"Senior backend engineers in Austin with AWS experience\",\n  \"useCase\": \"recruiting\",\n  \"channels\": [\"ses\"]\n}"
+        },
+        "url": { "raw": "{{baseUrl}}research", "host": ["{{baseUrl}}research"] }
+      }
+    },
+    {
+      "name": "3 - Get task (poll until completed)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}research/{{taskId}}",
+          "host": ["{{baseUrl}}research/{{taskId}}"]
+        }
+      }
+    },
+    {
+      "name": "4 - List recent tasks",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}research", "host": ["{{baseUrl}}research"] }
+      }
+    },
+    {
+      "name": "5 - Submit research (business development)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.collectionVariables.set('taskId', pm.response.json().taskId);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"prompt\": \"Series-A fintech companies hiring backend engineers in NYC\",\n  \"useCase\": \"bd\",\n  \"channels\": [\"ses\"]\n}"
+        },
+        "url": { "raw": "{{baseUrl}}research", "host": ["{{baseUrl}}research"] }
+      }
+    },
+    {
+      "name": "6 - Schedule a recurring run",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"prompt\": \"Senior data engineers in Denver\",\n  \"useCase\": \"recruiting\",\n  \"channels\": [\"slack\"],\n  \"scheduleExpression\": \"rate(1 day)\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}research/schedule",
+          "host": ["{{baseUrl}}research/schedule"]
+        }
+      }
+    }
+  ]
+}

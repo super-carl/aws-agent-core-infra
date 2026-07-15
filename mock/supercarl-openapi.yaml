@@ -1,0 +1,125 @@
+openapi: 3.0.3
+info:
+  title: SuperCarl API (Mock Contract)
+  version: "0.1.0-week1"
+  description: >
+    Week 1 mock contract for the SuperCarl People / Profile / Company endpoints.
+    The real API is a Week 1 dependency (expected end of Week 1). Until it ships,
+    Action Group executors are built and tested against THIS contract, and fall
+    back to deterministic mock data (see functions/*/supercarl_client.py).
+servers:
+  - url: https://mock.supercarl.local
+    description: Local mock placeholder (executors return deterministic data)
+  - url: https://api.supercarl.example
+    description: Real SuperCarl API (set SUPERCARL_API_BASE_URL once available)
+security:
+  - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: SuperCarl API key (stored in Secrets Manager as supercarl/api-key)
+  schemas:
+    Profile:
+      type: object
+      required: [profile_id, name, source]
+      properties:
+        profile_id: { type: string, example: p_0429173 }
+        name: { type: string }
+        title: { type: string }
+        company: { type: string }
+        location: { type: string }
+        match_reason: { type: string }
+        source: { type: string, enum: [supercarl_api] }
+    Company:
+      type: object
+      required: [company_id, name]
+      properties:
+        company_id: { type: string, example: c_0429173 }
+        name: { type: string }
+        industry: { type: string }
+        size: { type: string, example: "51-200" }
+        location: { type: string }
+        match_reason: { type: string }
+    Error:
+      type: object
+      properties:
+        error: { type: string }
+paths:
+  /v1/people/search:
+    post:
+      summary: People Search — find candidate/contact profiles
+      operationId: peopleSearch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [query]
+              properties:
+                query: { type: string }
+                limit: { type: integer, default: 25, maximum: 50 }
+      responses:
+        "200":
+          description: Matching profiles
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results: { type: array, items: { $ref: "#/components/schemas/Profile" } }
+                  count: { type: integer }
+        "400": { description: Bad request, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
+        "401": { description: Unauthorized }
+        "429": { description: Rate limited }
+  /v1/profiles/{profileId}:
+    get:
+      summary: Profile Lookup — resolve/enrich a profile by id
+      operationId: profileLookup
+      parameters:
+        - name: profileId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Enriched profile
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Profile"
+                  - type: object
+                    properties:
+                      summary: { type: string }
+                      skills: { type: array, items: { type: string } }
+        "404": { description: Not found }
+        "429": { description: Rate limited }
+  /v1/companies/search:
+    post:
+      summary: Company Search — find organizations for BD targeting
+      operationId: companySearch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [query]
+              properties:
+                query: { type: string }
+                limit: { type: integer, default: 25, maximum: 50 }
+      responses:
+        "200":
+          description: Matching companies
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results: { type: array, items: { $ref: "#/components/schemas/Company" } }
+                  count: { type: integer }
+        "400": { description: Bad request }
+        "429": { description: Rate limited }

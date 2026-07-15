@@ -1,0 +1,2 @@
+# Orchestrator — boto3 provided by the Lambda runtime; pinned for local parity.
+boto3>=1.34.0
