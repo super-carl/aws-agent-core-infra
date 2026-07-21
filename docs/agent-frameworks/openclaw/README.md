@@ -103,14 +103,22 @@ headings render instead of raw markdown.
    openclaw mcp doctor supercarl --probe
    ```
 4. Restart the gateway. Now message your agent from any connected channel.
-5. *(For chat delivery only.)* Pair a messaging channel - WhatsApp, Slack,
-   Telegram, Discord, Signal, iMessage and others are supported:
+5. *(For chat delivery only.)* Pair a messaging channel:
    ```bash
-   openclaw channels list --all      # what's installable
-   openclaw channels login whatsapp  # pair (QR, token or OAuth per channel)
+   openclaw channels list --all                              # the full catalog
+   openclaw channels add --channel telegram --bot-token ...  # configure
+   openclaw channels login --channel telegram                # link
    ```
    Search and dashboards work without this; it is only needed for the scheduled
    watch to push digests to your phone.
+
+   > **Pick a bundled channel.** On OpenClaw 2026.7.1 only **Telegram** and
+   > **iMessage** ship in the box. The rest install from ClawHub as third-party
+   > plugins, and those are denied the credential store
+   > (`openKeyedStore is only available for trusted plugins in this release`), so
+   > they link and then fail to start. WhatsApp pairs cleanly and still cannot hold
+   > a session - we hit this directly. Telegram is the quickest reliable path: make
+   > a bot with @BotFather, pass the token to `channels add`.
 
 ## Safety (built in)
 
