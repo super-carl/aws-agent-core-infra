@@ -82,7 +82,20 @@ model harness. (The config also sends `X-Client-Name` / `User-Agent` headers.)
 
 **Readable terminal output.** Pipe the agent's markdown through a renderer such as
 [`glow`](https://github.com/charmbracelet/glow) (`brew install glow`) so tables and
-headings render instead of raw markdown.
+headings render instead of raw markdown. Pipe glow's own output onward (`| cat`) if
+you are scripting it - on a TTY it opens an interactive pager and waits for a
+keypress, which hangs unattended runs.
+
+**Watching the tool calls.** `--verbose on` does not surface MCP invocations. The
+audit log does, and it is worth putting on screen next to the conversation:
+
+```bash
+openclaw audit --kind tool_action --limit 40 --json   # toolName: mcp__supercarl__people_search
+```
+
+The table form truncates tool names, so read the JSON. Polling that every couple of
+seconds gives a live feed of every SuperCarl call the agent makes - useful in a demo
+for showing that the answers come from tools rather than from the model.
 
 ## Setup
 
