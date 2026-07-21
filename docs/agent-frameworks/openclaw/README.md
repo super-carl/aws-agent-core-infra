@@ -112,13 +112,21 @@ headings render instead of raw markdown.
    Search and dashboards work without this; it is only needed for the scheduled
    watch to push digests to your phone.
 
-   > **Pick a bundled channel.** On OpenClaw 2026.7.1 only **Telegram** and
-   > **iMessage** ship in the box. The rest install from ClawHub as third-party
-   > plugins, and those are denied the credential store
-   > (`openKeyedStore is only available for trusted plugins in this release`), so
-   > they link and then fail to start. WhatsApp pairs cleanly and still cannot hold
-   > a session - we hit this directly. Telegram is the quickest reliable path: make
-   > a bot with @BotFather, pass the token to `channels add`.
+   > **Install channel plugins from npm, not ClawHub.** Only **Telegram** and
+   > **iMessage** ship bundled on 2026.7.1; everything else is a plugin. Install
+   > the official npm package:
+   >
+   > ```bash
+   > openclaw plugins install @openclaw/whatsapp   # official - works
+   > # NOT: openclaw plugins install clawhub:@openclaw/whatsapp
+   > ```
+   >
+   > The ClawHub spec installs the same code as an untrusted third-party plugin,
+   > which is denied the credential store
+   > (`openKeyedStore is only available for trusted plugins in this release`). The
+   > channel then pairs successfully and fails to start, which is a confusing place
+   > to land. Installed from npm it is a trusted official install and runs. Restart
+   > the gateway after installing (`openclaw gateway restart`).
 
 ## Safety (built in)
 
