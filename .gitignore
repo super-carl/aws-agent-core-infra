@@ -99,6 +99,7 @@ demo/
 scripts/record-demo.mjs
 scripts/make-demo-config.sh
 scripts/openclaw-demo.sh
+scripts/openclaw-watch.sh
 scripts/demo.sh
 scripts/make_week1_deck.py
 scripts/make_week3_deck.py

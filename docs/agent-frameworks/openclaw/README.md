@@ -15,11 +15,36 @@ a shortlist right in the thread. For BD: *"Series-A fintech companies in NYC
 hiring backend engineers, and a few contacts at each"* → `company_search` then
 `people_search` (the Company → People loop).
 
-**Always-on (heartbeat).** OpenClaw's scheduled heartbeat runs a saved brief on a
-cadence - e.g. every morning, *"new Series-A fintech engineering leaders in NYC"* -
-and proactively DMs the fresh shortlist. This is the same "set-and-forget"
-sourcing our AWS deployment does with EventBridge, but delivered into the user's
-messaging app.
+**Always-on (scheduled watch).** OpenClaw's cron runs a saved brief on a cadence
+and proactively DMs the result. The useful shape is a *watch*, not a re-run: keep
+a ledger of everyone already reported, and push a message only when someone **new**
+shows up.
+
+```bash
+openclaw cron add \
+  --name supercarl-watch \
+  --cron "0 9,17 * * *" \
+  --model claude-opus-4-8 \
+  --announce --channel whatsapp --to "+15551234567" \
+  --message "Search SuperCarl for <brief>. Compare against seen.json (candidates
+             already reported) and rewrite it as the cumulative list. Rebuild the
+             dashboard, badging this run's arrivals as NEW and sorting them first.
+             Reply with a short chat digest naming only the new people - or one
+             line saying there are none."
+```
+
+Twice a day the dashboard refreshes itself and only genuinely new matches reach
+your phone. This is the same "set-and-forget" sourcing our AWS deployment does with
+EventBridge, but delivered into the user's messaging app.
+
+Two notes from running it:
+
+- **Make the ledger cumulative, not an overwrite.** If you rewrite it with just
+  the current top N, anyone who drops out of the ranking gets re-reported as NEW
+  on a later run. Union it instead.
+- Scheduled jobs run through the **Gateway**, so it has to be running
+  (`openclaw gateway run`, or `openclaw gateway install && openclaw gateway start`
+  to keep it up). Ad-hoc runs via `openclaw agent --local` do not need it.
 
 **Build something, not just a list.** The point of running SuperCarl inside a
 capable agent is that the agent can *act on* the data. Ask it to turn a search
@@ -78,6 +103,14 @@ headings render instead of raw markdown.
    openclaw mcp doctor supercarl --probe
    ```
 4. Restart the gateway. Now message your agent from any connected channel.
+5. *(For chat delivery only.)* Pair a messaging channel - WhatsApp, Slack,
+   Telegram, Discord, Signal, iMessage and others are supported:
+   ```bash
+   openclaw channels list --all      # what's installable
+   openclaw channels login whatsapp  # pair (QR, token or OAuth per channel)
+   ```
+   Search and dashboards work without this; it is only needed for the scheduled
+   watch to push digests to your phone.
 
 ## Safety (built in)
 
