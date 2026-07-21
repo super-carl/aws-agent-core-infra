@@ -21,6 +21,23 @@ and proactively DMs the fresh shortlist. This is the same "set-and-forget"
 sourcing our AWS deployment does with EventBridge, but delivered into the user's
 messaging app.
 
+**Build something, not just a list.** The point of running SuperCarl inside a
+capable agent is that the agent can *act on* the data. Ask it to turn a search
+into an artifact, for example:
+
+> "Find senior backend engineers in Austin with AWS experience. Pick the 10
+> strongest, then build me an HTML dashboard with a card per candidate: their ICP
+> fit (quoting the SuperCarl evidence) and a **draft** personalized outreach
+> message with a copy button. Open it when it's done."
+
+OpenClaw runs the search over MCP, reasons about fit, writes a self-contained HTML
+file, and opens it. Same pattern for other end points: a Slack/WhatsApp digest on
+a schedule, a refreshing dashboard, or drafting (never sending) outreach.
+
+> Keep drafting and sending separate. The tool allowlist excludes every
+> outreach/write tool, so the agent can compose messages for a human to review and
+> send, but cannot send them itself.
+
 Either way the user never touches AWS or an API - SuperCarl is just a tool inside
 the agent they already use.
 
@@ -28,6 +45,19 @@ the agent they already use.
 Anthropic, or the local Claude CLI via `claude-cli/<model>`) - Bedrock needs AWS
 credentials with model access - and the **SuperCarl MCP** (a SuperCarl API key).
 OpenClaw needs Node >= 24.15; the SuperCarl MCP transport is `streamable-http`.
+
+**Use a strong model.** Reasoning over search results is the hard part: prefer
+**Claude Opus 4.8** or **Sonnet 5** (`claude-opus-4-8` / `claude-sonnet-5` on
+Bedrock or via the Claude CLI provider). Smaller models struggle on complex briefs.
+
+**Identify the agent.** SuperCarl attributes a session via its `agent_session`
+tool. Allow that tool and have the agent bind a session with
+`client_name="OpenClaw"` so SuperCarl sees **OpenClaw** rather than the underlying
+model harness. (The config also sends `X-Client-Name` / `User-Agent` headers.)
+
+**Readable terminal output.** Pipe the agent's markdown through a renderer such as
+[`glow`](https://github.com/charmbracelet/glow) (`brew install glow`) so tables and
+headings render instead of raw markdown.
 
 ## Setup
 

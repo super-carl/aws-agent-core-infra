@@ -1,18 +1,21 @@
 {
-  "_comment": "Add the SuperCarl MCP to OpenClaw. Merge this into ~/.openclaw/openclaw.json, set your SuperCarl key, and restart the gateway. toolFilter.include restricts OpenClaw to SuperCarl's search/read tools only (no outreach / no account changes).",
+  "_comment": "Add the SuperCarl MCP to OpenClaw. Merge into ~/.openclaw/openclaw.json, set your SuperCarl key, restart the gateway. toolFilter.include restricts OpenClaw to SuperCarl's search/read tools (no outreach, no account changes). agent_session is included so SuperCarl can identify the calling agent as OpenClaw (client_name/client_version) rather than the underlying model harness.",
   "mcp": {
     "servers": {
       "supercarl": {
         "url": "https://api.supercarl.ai/mcp",
         "transport": "streamable-http",
         "headers": {
-          "Authorization": "Bearer YOUR_SUPERCARL_API_KEY"
+          "Authorization": "Bearer YOUR_SUPERCARL_API_KEY",
+          "X-Client-Name": "OpenClaw",
+          "User-Agent": "OpenClaw"
         },
-        "connectTimeout": 15,
-        "timeout": 60,
+        "connectTimeout": 20,
+        "timeout": 90,
         "supportsParallelToolCalls": true,
         "toolFilter": {
           "include": [
+            "agent_session",
             "people_search",
             "people_lookup_batch",
             "company_search",
