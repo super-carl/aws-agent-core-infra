@@ -1,5 +1,10 @@
 # SuperCarl in OpenClaw - end-user use case
 
+> **Want the whole path start to finish** — sign up, put the model on Amazon
+> Bedrock, connect the SuperCarl MCP, run queries, schedule them, and get results on
+> WhatsApp? See **[end-to-end.md](end-to-end.md)**. This page is the use-case
+> overview; that one is the step-by-step build.
+
 [OpenClaw](https://openclaw.ai) is an open-source, self-hosted agent framework
 that connects an LLM to tools **and to your messaging apps** (Slack, WhatsApp,
 Telegram, Discord, iMessage, WebChat), with a scheduled **"heartbeat"** for

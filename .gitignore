@@ -109,3 +109,9 @@ docs/agent-frameworks/*/example-run.md
 /package.json
 /package-lock.json
 scripts/make_week2_deck.py
+demo/hands-on.sh
+demo/reel.html
+demo/ptyrec.py
+demo/live.sh
+demo/apply.sh
+demo/background.txt

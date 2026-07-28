@@ -23,7 +23,9 @@ SuperCarl plugs into the agent ecosystem two ways:
    (sourcing copilot in Slack/WhatsApp), [goose](docs/agent-frameworks/goose/)
    (open terminal agent), Claude Code, Codex, Cursor - and ask for
    people or companies in-session (no AWS). See
-   [docs/mcp-integration.md](docs/mcp-integration.md).
+   [docs/mcp-integration.md](docs/mcp-integration.md). The full OpenClaw walkthrough -
+   signup, model on Bedrock, MCP, queries, scheduling, WhatsApp - is
+   [docs/agent-frameworks/openclaw/end-to-end.md](docs/agent-frameworks/openclaw/end-to-end.md).
 2. **Deploy this repo** for a hardened service (routing, guardrails, grounding,
    delivery, scheduling, state) in your own AWS account.
 
