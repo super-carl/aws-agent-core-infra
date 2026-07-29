@@ -54,7 +54,7 @@ Trust: `scheduler.amazonaws.com`.
 - **Credential rotation**: rotate the `supercarl/api-key` secret value in place;
   no code or role change required (executors read it on cold start).
 
-## Hardening backlog (post-Week-1)
+## Hardening backlog (future)
 - Scope `ses:SendEmail` to the verified identity ARN with a `ses:FromAddress` condition.
 - Add a resource policy on the task table; enable DynamoDB encryption with a CMK.
 - Add VPC endpoints + private networking if the SuperCarl API supports PrivateLink.

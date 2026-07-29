@@ -116,7 +116,7 @@ DynamoDB, so scheduled runs are auditable and resumable.
   guardrail via `ApplyGuardrail` (no model access required) - denied topics and
   PII are intervened on, benign briefs pass.
 
-## Extensions (post-Week-1)
+## Extensions (future)
 
 - AgentCore **Gateway** (MCP) + **Code Interpreter** can be added to the stack (the
   QuickStart pattern this is based on includes both).

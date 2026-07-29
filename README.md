@@ -367,10 +367,10 @@ infra/                 CDK app (single stack: lib/supercarl-stack.ts) + tests
 local/                 Local dev API server (no AWS) + Dockerfile
 mock/                  Mock SuperCarl API (OpenAPI + local server) for offline dev
 scripts/               deploy.sh, post-deploy.sh, verify-guardrails.sh,
-                       run-local.sh, make-postman-env.sh, sync-client.sh
+                       run-local.sh, openclaw-up.sh, make-postman-env.sh
 tests/                 Executor + orchestrator unit tests
-docs/                  architecture, API contract, charter, IAM, weekly progress,
-                       mcp-integration, local-development, agent-frameworks/,
+docs/                  architecture, API contract, scope, IAM, mcp-integration,
+                       local-development, agent-frameworks/ (openclaw, goose),
                        diagrams/ (draw.io), postman/, bruno/
 AGENTS.md / CLAUDE.md   Guide for coding agents (Claude Code, Codex, goose, …)
 docker-compose.yml     Run the local API in a container
