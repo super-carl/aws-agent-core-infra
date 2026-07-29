@@ -113,8 +113,8 @@ for showing that the answers come from tools rather than from the model.
    openclaw mcp add supercarl \
      --url https://api.supercarl.ai/mcp \
      --transport streamable-http \
-     --header "Authorization: Bearer $SUPERCARL_API_KEY" \
-     --include 'people_search,people_lookup_batch,company_search,company_search_batch,jobs_search,posts_search,query_search_result'
+     --header "Authorization=Bearer $SUPERCARL_API_KEY" \
+     --include 'agent_session,people_search,people_lookup_batch,company_search,company_search_batch,jobs_search,posts_search,query_search_result'
    ```
 3. Verify connectivity and see the discovered tools:
    ```bash

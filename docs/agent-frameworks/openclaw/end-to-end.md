@@ -147,9 +147,9 @@ Register SuperCarl as an MCP server, restricted to its search/read tools:
 openclaw mcp add supercarl \
   --url https://api.supercarl.ai/mcp \
   --transport streamable-http \
-  --header "Authorization: Bearer $SUPERCARL_API_KEY" \
-  --header "X-Client-Name: OpenClaw" \
-  --header "User-Agent: OpenClaw" \
+  --header "Authorization=Bearer $SUPERCARL_API_KEY" \
+  --header "X-Client-Name=OpenClaw" \
+  --header "User-Agent=OpenClaw" \
   --include 'agent_session,people_search,people_lookup_batch,company_search,company_search_batch,jobs_search,posts_search,query_search_result'
 ```
 
@@ -373,7 +373,7 @@ export SUPERCARL_API_KEY="carl_..."
 openclaw models set "bedrock/us.anthropic.claude-sonnet-4-5-20250929-v1:0"
 # tools over MCP:
 openclaw mcp add supercarl --url https://api.supercarl.ai/mcp --transport streamable-http \
-  --header "Authorization: Bearer $SUPERCARL_API_KEY" \
+  --header "Authorization=Bearer $SUPERCARL_API_KEY" \
   --include 'agent_session,people_search,people_lookup_batch,company_search,company_search_batch,jobs_search,posts_search,query_search_result'
 openclaw plugins install @openclaw/whatsapp
 openclaw channels login --channel whatsapp
