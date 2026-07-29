@@ -15,22 +15,36 @@ there is no shared backend.
 > (Runtime + Memory + Guardrails + one-command CDK deploy), specialized for
 > autonomous sourcing against the **live SuperCarl MCP server**.
 
-### Use it from your agent
+### Two ways to run it - both fully self-serve
 
-SuperCarl plugs into the agent ecosystem two ways:
+Everything here runs on **your own accounts**: your AWS account and your own
+SuperCarl API key. Nothing is hosted or shared - clone, bring two credentials, run.
+There are two ways to use it, and you can run either or both:
 
-1. **Add SuperCarl's MCP directly** to an agent - [OpenClaw](docs/agent-frameworks/openclaw/)
-   (sourcing copilot in Slack/WhatsApp), [goose](docs/agent-frameworks/goose/)
-   (open terminal agent), Claude Code, Codex, Cursor - and ask for
-   people or companies in-session (no AWS). See
-   [docs/mcp-integration.md](docs/mcp-integration.md). The full OpenClaw walkthrough -
-   signup, model on Bedrock, MCP, queries, scheduling, WhatsApp - is
-   [docs/agent-frameworks/openclaw/end-to-end.md](docs/agent-frameworks/openclaw/end-to-end.md).
-2. **Deploy this repo** for a hardened service (routing, guardrails, grounding,
-   delivery, scheduling, state) in your own AWS account.
+**A. In an open agent (OpenClaw / goose / Claude Code) - local, minutes.**
+Connect the SuperCarl MCP and a model, then talk to it in plain language: search
+people and companies, build a dashboard, schedule a watch, get results on WhatsApp.
+The model is your choice - **Amazon Bedrock**, Anthropic, or a local Claude CLI.
 
-Opening this repo in a coding agent? [AGENTS.md](AGENTS.md) tells the agent how to
-set it up from zero and what to ask you for.
+```bash
+export SUPERCARL_API_KEY=carl_...          # your SuperCarl key  (the data)
+export OPENCLAW_MODEL=claude-opus-4-8      # your model          (or a Bedrock id)
+./scripts/openclaw-up.sh                    # wires the MCP + model, ready to talk
+```
+
+Full walkthrough - signup, model on Bedrock, MCP, queries, scheduling, WhatsApp:
+[docs/agent-frameworks/openclaw/end-to-end.md](docs/agent-frameworks/openclaw/end-to-end.md).
+Also: [goose](docs/agent-frameworks/goose/), and [docs/mcp-integration.md](docs/mcp-integration.md)
+for Claude Code / Codex / Cursor.
+
+**B. As a deployed service on Amazon Bedrock AgentCore - in your AWS account.**
+One command stands up the whole agent - Runtime, Memory, Guardrails, API, delivery,
+scheduling - in **your** account, running the model on Bedrock. See
+[Quick start](#quick-start) below.
+
+Both paths are self-serve reference implementations: bring your own AWS account and
+your own SuperCarl key, and you reproduce the same agent. Opening this repo in a
+coding agent? [AGENTS.md](AGENTS.md) tells it how to set it up from zero.
 
 ---
 
