@@ -362,6 +362,22 @@ Same two connections, pointed elsewhere:
 
 ---
 
+## The fast path: one script
+
+Everything above (except pairing WhatsApp) is wrapped in a script in this repo. Set
+the two connections in your environment and run it:
+
+```bash
+export SUPERCARL_API_KEY=carl_...          # the data
+export OPENCLAW_MODEL=claude-opus-4-8      # the model (or a Bedrock/Anthropic id)
+./scripts/openclaw-up.sh                    # wires the MCP + model, verifies, done
+```
+
+It registers the SuperCarl MCP with the read-only allowlist, sets the model, and
+confirms the connection - then you talk to the agent in plain language
+(`openclaw chat --local`). Pair WhatsApp (Part 9) only when you want scheduled
+digests delivered to your phone.
+
 ## The whole path, condensed
 
 ```bash
