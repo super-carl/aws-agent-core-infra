@@ -11,7 +11,7 @@ This repository **is the product**: the reference implementation of the
 live agentic loop. It is single-tenant per deployment - you run your own infra;
 there is no shared backend.
 
-> Built on the [Bedrock AgentCore QuickStart](https://github.com/awslabs) pattern
+> Built on the [Bedrock AgentCore QuickStart](https://github.com/awslabs/amazon-bedrock-agentcore-samples) pattern
 > (Runtime + Memory + Guardrails + one-command CDK deploy), specialized for
 > autonomous sourcing against the **live SuperCarl MCP server**.
 

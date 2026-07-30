@@ -10,7 +10,7 @@ stack; nothing is shared across deployments. Grants below mirror
 The Strands agent's execution identity.
 | Permission | Resource | Why |
 |------------|----------|-----|
-| `bedrock:InvokeModel*` | foundation-model/*, inference-profile/* (account) | Reasoning (Sonnet 4.6 / Haiku 4.5) |
+| `bedrock:InvokeModel*` | foundation-model/*, inference-profile/* (account) | Reasoning (Sonnet 4.5 / Haiku 4.5) |
 | `bedrock:ApplyGuardrail`, `bedrock:GetGuardrail` | SuperCarl guardrail ARN | Safety enforcement |
 | `bedrock-agentcore` Memory read/write + `BatchCreateMemoryRecords` | Memory ARN | STM + LTM |
 | `lambda:InvokeFunction` | the 4 `supercarl_*` executors | Tool calls |
@@ -21,6 +21,7 @@ The Strands agent's execution identity.
 |------------|----------|-----|
 | `bedrock-agentcore:InvokeAgentRuntime` | Runtime ARN | Run the agent |
 | DynamoDB read/write | `supercarl-tasks` + `byCreatedAt` GSI | Task state machine |
+| `lambda:InvokeFunction` | orchestrator (self) | Async self-invoke: return 202 fast, run the loop in the background |
 | `scheduler:CreateSchedule/DeleteSchedule/GetSchedule` | `schedule/supercarl/*` | Scheduled tasks |
 | `iam:PassRole` | SchedulerRole | Hand the schedule its invoke role |
 | Basic Lambda execution + X-Ray | (managed) | Logs + traces |
@@ -35,9 +36,10 @@ Each executor (`people_search`, `profile_lookup`, `company_search`) gets:
 `deliver_results` additionally gets:
 | Permission | Resource | Why |
 |------------|----------|-----|
-| `secretsmanager:GetSecretValue` | `supercarl/slack-webhook` | Slack/Teams delivery |
+| `secretsmanager:GetSecretValue` | `supercarl/slack-webhook` | Slack delivery |
 | `s3:PutObject*` | artifact bucket | Retain shortlist artifacts |
 | `ses:SendEmail`, `ses:SendRawEmail` | `*` (scope to verified identity in prod) | Email delivery |
+| DynamoDB read/write | `supercarl-tasks` | Persist the RESULT item and flip META to `completed` |
 
 ### 4. EventBridge Scheduler role
 | Permission | Resource | Why |

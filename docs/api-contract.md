@@ -18,8 +18,7 @@ Auth: Cognito **client-credentials** bearer token (except `/health`).
 {
   "prompt": "Senior backend engineers in Austin with AWS + distributed systems",
   "useCase": "recruiting",          // "recruiting" | "bd"
-  "channels": ["ses", "slack"],     // optional, default ["ses"]
-  "model": "us.anthropic.claude-sonnet-4-6-v1:0"  // optional override
+  "channels": ["ses", "slack"]      // optional, default ["ses"]
 }
 // response 202 (async - the agent loop runs in the background)
 { "taskId": "task-ab12cd34ef56", "status": "processing", "poll": "/v1/research/task-ab12cd34ef56" }
@@ -27,7 +26,8 @@ Auth: Cognito **client-credentials** bearer token (except `/health`).
 Submission is asynchronous: poll `GET /v1/research/{taskId}` until `status` is
 `completed` (or `failed`) to read the synthesized shortlist. API Gateway has a
 hard 29s timeout, and the agent loop can take longer, so the work runs in a
-background worker (5-min budget).
+background worker (4-min budget). The model is fixed per deployment (the stack's
+`MODEL_ID`); there is no per-request model override.
 
 ### GET /v1/research/{taskId} - task status + shortlist
 ```json

@@ -29,7 +29,7 @@ shows up.
 openclaw cron add \
   --name supercarl-watch \
   --cron "0 9,17 * * *" \
-  --model claude-opus-4-8 \
+  --model "claude-cli/claude-opus-4-8" \
   --announce --channel whatsapp --to "+15551234567" \
   --message "Search SuperCarl for <brief>. Compare against seen.json (candidates
              already reported) and rewrite it as the cumulative list. Rebuild the
@@ -156,15 +156,15 @@ the account. This mirrors the allowlist our AWS deployment enforces.
 
 ## Demo talk track
 
-- "This is the end-user experience Michael asked for: SuperCarl inside an open
-  agent the user already runs - here, in Slack."
+- "This is the end-user experience: SuperCarl inside an open agent the user
+  already runs - here, in Slack."
 - "I just ask in plain language; OpenClaw calls SuperCarl over MCP and brings back
   real people at real companies, grounded and traceable."
 - "The heartbeat makes it proactive - a daily shortlist delivered to my DMs, no
   clicks."
 - "It's search/read only - safe by configuration, no outreach on autopilot."
 
-## The three ways to consume SuperCarl (for the client)
+## The three ways to consume SuperCarl
 
 | Path | Who it's for |
 |------|--------------|

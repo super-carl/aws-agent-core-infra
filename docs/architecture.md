@@ -14,7 +14,7 @@ command into the deployer's own AWS account.
 | Orchestration | DynamoDB | `supercarl-tasks` single table | Task-state machine (META / STEP#n / RESULT) |
 | Agent | AgentCore Runtime | `agentcore.Runtime` (ARM64) | Strands agent: reasoning + tool routing |
 | Agent | Memory | `agentcore.Memory` (Semantic + Summarization + UserPreference) | STM (session loop) + LTM (deployer ICP) |
-| Agent | Guardrail | `bedrock.CfnGuardrail` | Moderation, PII redaction, denied topics, injection defense |
+| Agent | Guardrail | `bedrock.CfnGuardrail` | Moderation, PII redaction, denied topics |
 | Tools | Action Group Lambdas | `functions/{people_search,profile_lookup,company_search,deliver_results}` | SuperCarl API executors |
 | External | SuperCarl API | (via `supercarl_client.py`) | Source of all profile data |
 | Delivery | SES + Slack/Teams | `deliver_results` | Formatted shortlist delivery |
@@ -49,9 +49,9 @@ resumable.
 DynamoDB holds the task state machine so long-running and scheduled loops survive
 across invocations. `STEP#{n}` items give an end-to-end trace of tool routing per
 task: the agent records `tool`, `input`, `status`, `latencyMs`, and `ts` for every
-tool call (Weeks 2-3 observability), used for QA and latency tuning.
+tool call, used for QA and latency tuning.
 
-## Observability (Weeks 2-3)
+## Observability
 
 A single CloudWatch dashboard (`supercarl`) spans every tier: API Gateway
 (requests, 4XX/5XX, latency p50/p99), orchestrator and the four executors
@@ -82,9 +82,9 @@ Action Group executors - so the stack stays deployable and testable offline.
 orchestrator (the worker), and returns `202 {taskId, status:"processing"}`
 immediately - the agent loop runs in the background (API Gateway has a hard 29s
 limit). Clients poll `GET /v1/research/{taskId}` for status and the shortlist.
-The worker Lambda has a 5-minute timeout to cover multi-step loops.
+The worker Lambda has a 4-minute timeout (240s) to cover multi-step loops.
 
-## Delivery (Week 3)
+## Delivery
 
 `deliver_results` renders the shortlist into channel-specific templates:
 - **SES**: multipart email with an HTML card layout plus a plain-text fallback.
@@ -104,9 +104,10 @@ DynamoDB, so scheduled runs are auditable and resumable.
 
 ## Safety
 
-- **Guardrails**: content filters (sexual, violence, hate, insults, misconduct,
-  prompt attack), PII (email anonymized; SSN/credit-card blocked), denied topics
-  (legal advice, financial advice, scoring beyond API data).
+- **Guardrails**: content filters (sexual, violence, hate, insults, misconduct;
+  input side), PII (email anonymized; SSN/credit-card blocked), denied topics
+  (legal advice, financial advice, scoring beyond API data). Prompt-attack
+  filtering is left off by design - it was flagging the agent's own system prompt.
 - **Grounding**: the system prompt forbids emitting any field not present in a
   SuperCarl API result; every profile carries `source = supercarl_api`. A
   deterministic grounding pass in `deliver_results` enforces this on the way out

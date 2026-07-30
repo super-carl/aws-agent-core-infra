@@ -3,7 +3,7 @@
 ## 1. Prerequisites
 - AWS CLI configured with a profile that can deploy CloudFormation/IAM/Bedrock.
 - Node.js 18+, Python 3.12+, Docker running, AWS CDK v2.
-- Bedrock model access enabled in your region for Sonnet 4.6 (and Haiku 4.5).
+- Bedrock model access enabled in your region for Sonnet 4.5 (and Haiku 4.5).
 
 ## 2. Deploy
 ```bash
@@ -15,18 +15,18 @@ needed, deploys, and runs a health check. Outputs are written to `cdk-outputs.js
 
 ## 3. Post-deploy config
 ```bash
-# SuperCarl API key (required for live data)
+# SuperCarl MCP: store your key AND the MCP URL - this enables the live MCP path.
+# The agent connects to the MCP directly; both fields must be present.
 aws secretsmanager put-secret-value --secret-id supercarl/api-key \
-  --secret-string '{"api_key":"YOUR_KEY"}' --profile <profile>
-
-# Point executors at the real API (once available)
-aws lambda update-function-configuration --function-name supercarl_people_search \
-  --environment 'Variables={SUPERCARL_API_BASE_URL=https://api.supercarl.example,API_KEY_SECRET_ARN=<arn>,REGION=us-east-1}' \
+  --secret-string '{"api_key":"YOUR_KEY","mcp_url":"https://api.supercarl.ai/mcp"}' \
   --profile <profile>
-# repeat for supercarl_profile_lookup, supercarl_company_search
 
 # Optional: Slack + SES (see scripts/post-deploy.sh)
 ```
+
+If the secret has no `mcp_url`, the agent falls back to the mock Action Group
+executors, so the stack stays deployable and testable offline - no live data until
+you add `mcp_url` as above.
 
 ## 4. Get a Cognito token (client-credentials)
 ```bash
@@ -75,6 +75,6 @@ The S3 bucket uses `RemovalPolicy.DESTROY` with `autoDeleteObjects`.
 
 ## Troubleshooting
 - **Docker not running** → start Docker Desktop (Runtime build needs it).
-- **Bedrock AccessDenied** → enable model access for Sonnet 4.6 in the region.
+- **Bedrock AccessDenied** → enable model access for Sonnet 4.5 in the region.
 - **429 from SuperCarl API** → executor surfaces a retryable tool error; the agent backs off.
 - **Empty shortlist** → check the executor still points at the mock vs the real API base URL.

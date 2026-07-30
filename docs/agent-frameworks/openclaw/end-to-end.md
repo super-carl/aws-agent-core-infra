@@ -228,7 +228,7 @@ openclaw agent --local -m "Find senior backend engineers in Seattle with AWS exp
 
 It runs the search, reasons about fit, writes a self-contained HTML file, and opens
 it. Same pattern points at other endpoints — a company→people BD loop, a jobs search
-that tailors your resume per role (see [the job-seeker flow](#other-shapes)).
+that tailors your resume per role (see [the job-seeker flow](#11-other-shapes)).
 
 ---
 
@@ -332,7 +332,7 @@ The one-line version: it can report to you; it cannot write to the people it fou
 
 ---
 
-## 11. Other shapes {#other-shapes}
+## 11. Other shapes
 
 Same two connections, pointed elsewhere:
 

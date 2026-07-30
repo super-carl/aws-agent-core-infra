@@ -102,7 +102,11 @@ The server exposes ~21 tools. This project uses **search / read tools only**:
 **Excluded on purpose** (write / account-mutating): `send_communication`,
 `project_action`, `project_google_sheet_sync`, `contacts_export`,
 `contacts_reconcile`, `watch_signals`, `super_carl_action`,
-`social_proximity_research`, `agent_session`, `send_*`.
+`social_proximity_research`, `send_*`.
+
+`agent_session` is read-only (it attributes the session to a client). This repo's
+AWS deployment omits it; the OpenClaw guide **does** allow it so SuperCarl sees the
+calling agent as "OpenClaw" rather than the underlying model. Either choice is safe.
 
 > Note: If you wire SuperCarl MCP directly into an agent (Mode 1), that agent *can*
 > see the write tools. For unattended or demo use, instruct the agent to use only

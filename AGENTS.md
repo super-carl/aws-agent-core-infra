@@ -1,6 +1,6 @@
 # AGENTS.md - guide for coding agents
 
-This file tells an AI coding agent (Claude Code, Codex, OpenClaude / goose,
+This file tells an AI coding agent (Claude Code, Codex, OpenClaw / goose,
 Cursor, …) how to set up and run **SuperCarl** for a user who just opened this
 repo. Read it top to bottom before acting.
 
