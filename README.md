@@ -75,49 +75,59 @@ delivery channel.
 
 ```mermaid
 flowchart TB
-    client([Client / caller])
+    users([Users / caller])
+    scmcp[["SuperCarl API / MCP<br/>(external · search + read tools)"]]
+    ses["SES — email"]
+    slack["Slack / Teams — webhooks"]
 
-    subgraph entry[Entry]
-        apigw["API Gateway + Cognito<br/>(client-credentials)"]
-        sched["EventBridge Scheduler"]
+    subgraph aws["AWS Cloud · us-east-1"]
+        direction TB
+        subgraph entry["Entry"]
+            cognito["Cognito<br/>authenticate / authorize"]
+            apigw["API Gateway<br/>(REST)"]
+            sched["EventBridge Scheduler"]
+        end
+        subgraph orchn["Orchestration"]
+            orch["Orchestrator Lambda<br/>(async worker)"]
+            ddb[("DynamoDB<br/>task-state machine")]
+            s3[("S3<br/>raw artifacts")]
+        end
+        subgraph rt["AgentCore Runtime · ECS · Strands (ARM64)"]
+            reason["Runtime<br/>reasoning + tool routing"]
+            mem["AgentCore Memory<br/>STM + LTM"]
+            guard["Guardrails"]
+            model["Bedrock models<br/>Claude Sonnet 4.5"]
+        end
+        subgraph obs["Security & observability"]
+            ct["CloudTrail"]
+            cw["CloudWatch"]
+        end
     end
 
-    subgraph orchn[Orchestration]
-        orch["Orchestrator Lambda<br/>(async worker)"]
-        ddb[("DynamoDB<br/>task state machine")]
-    end
-
-    subgraph rt["AgentCore Runtime · Strands · ARM64"]
-        reason["Reasoning + tool routing<br/>Claude Sonnet 4.5"]
-        mem["Memory (STM + LTM)"]
-        guard["Guardrails"]
-    end
-
-    subgraph tools[Tools]
-        deliver["deliver_results<br/>(Lambda)"]
-        mockx["mock executors<br/>(offline fallback)"]
-    end
-
-    scmcp[["SuperCarl MCP<br/>api.supercarl.ai/mcp<br/>search / read tools"]]
-    out["SES · Slack/Teams · S3 artifact"]
-
-    client -->|"POST /v1/research"| apigw --> orch
-    sched --> orch
-    orch <--> ddb
-    orch -->|"self-invoke (async)"| orch
+    users -->|"POST /v1/research"| apigw
+    apigw --- cognito
+    sched -->|"scheduled"| orch
+    apigw --> orch
+    orch <-->|"task state"| ddb
     orch -->|"InvokeAgentRuntime"| reason
     reason --- mem
     reason --- guard
-    reason -->|"people/company/jobs/posts search"| scmcp
-    reason -->|"deliver"| deliver
-    reason -. "MCP not configured" .-> mockx
-    deliver --> out
-    deliver --> ddb
+    reason --- model
+    reason -->|"MCP (search + read)"| scmcp
+    reason -->|"deliver_results"| s3
+    reason -->|"email"| ses
+    reason -->|"webhooks"| slack
+    reason -.-> cw
+    orch -.-> ct
 ```
 
-> Editable diagram with **real AWS service icons**:
-> [docs/diagrams/supercarl-architecture.drawio](docs/diagrams/supercarl-architecture.drawio)
+> **Editable diagram with real AWS service icons** (the full reference / target
+> architecture — includes optional pieces not built by `deploy.sh`, e.g. a
+> CloudFront + S3 web UI, web search, AgentCore Gateway / Identity, prompt
+> versioning):
+> [docs/diagrams/supercarl-aws-architecture-agentcore.drawio](docs/diagrams/supercarl-aws-architecture-agentcore.drawio)
 > (open in [draw.io](https://app.diagrams.net) or the VS Code Draw.io extension).
+> The Mermaid diagram above reflects exactly what the CDK stack provisions today.
 
 ### Request lifecycle (async)
 
