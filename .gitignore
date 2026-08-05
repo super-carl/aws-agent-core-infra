@@ -126,3 +126,12 @@ demo/steps-talk.sh
 demo/extra-slides.html
 demo/steps-send.sh
 demo/steps-clone.sh
+demo/title.html
+demo/build-vo.sh
+demo/build-final.sh
+demo/portrait-bg.html
+demo/portrait-pro.sh
+demo/vertical-deck.html
+demo/steps-talk-v.sh
+demo/steps-send-v.sh
+demo/portrait-real.sh
